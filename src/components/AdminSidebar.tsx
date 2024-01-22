@@ -1,22 +1,77 @@
 import { Link, Location, useLocation } from "react-router-dom";
-import { RiDashboardFill, RiShoppingBag3Fill, RiCoupon3Fill } from "react-icons/ri";
+import {
+  RiDashboardFill,
+  RiShoppingBag3Fill,
+  RiCoupon3Fill,
+} from "react-icons/ri";
 import { IoIosPeople } from "react-icons/io";
 import { AiFillFileText } from "react-icons/ai";
 import { IconType } from "react-icons";
-import { FaChartBar, FaChartPie, FaChartLine,FaStopwatch, FaGamepad } from "react-icons/fa";
+import {
+  FaChartBar,
+  FaChartPie,
+  FaChartLine,
+  FaStopwatch,
+  FaGamepad,
+} from "react-icons/fa";
+import { useEffect, useState } from "react";
+import { HiMenuAlt4 } from "react-icons/hi";
 
 const AdminSidebar = () => {
   const location = useLocation();
 
-  return (
-    <aside>
-      <h2>LOGO.</h2>
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [phoneActive, setPhoneActive] = useState<boolean>(
+    window.innerWidth < 1100
+  );
 
-      <DivOne location={location} />
-      <DivTwo location={location} />
-      <DivThree location={location} />
-    </aside>
-  ); 
+  const resizeHandler = () => {
+    setPhoneActive(window.innerWidth < 1100);
+  };
+
+  useEffect(() => {
+    window.addEventListener("resize", resizeHandler);
+
+    return () => {
+      window.removeEventListener("resize", resizeHandler);
+    };
+  }, []);
+  return (
+    <>
+      {phoneActive && (
+        <button id="hamburger" onClick={() => setShowModal(true)}>
+          <HiMenuAlt4 />
+        </button>
+      )}
+
+      <aside
+        style={
+          phoneActive
+            ? {
+                width: "20rem",
+                height: "100vh",
+                position: "fixed",
+                top: 0,
+                left: showModal ? "0" : "-20rem",
+                transition: "all 0.5s",
+              }
+            : {}
+        }
+      >
+        <h2>LOGO.</h2>
+
+        <DivOne location={location} />
+        <DivTwo location={location} />
+        <DivThree location={location} />
+
+        {phoneActive && (
+          <button id="close-sidebar" onClick={() => setShowModal(false)}>
+            Close
+          </button>
+        )}
+      </aside>
+    </>
+  );
 };
 
 interface LiProps {
